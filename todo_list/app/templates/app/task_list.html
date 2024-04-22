@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>
+        My tasks:
+        <a class="btn btn-outline-primary float-right" href="{% url 'tasks:task-create' %}">
+        Add task
+        </a>
+    </h1>
+    {% if task_list %}
+        <ul>
+        {% for task in task_list %}
+            <li>
+            {{ task.content }}
+            {% if task.is_done %}
+                <b style="color: green">Done</b>
+            {% else %}
+                <b style="color: red">Not done</b>
+            {% endif %}
+                <a class="btn btn-outline-primary float-right" href="{% url 'tasks:task-confirm' pk=task.id %}">
+                {% if task.is_done %}
+                    Undo
+                {% else %}
+                    Complete
+                {% endif %}
+                </a>
+            <br>
+            Created: {{ task.created }}
+            <br>
+            {% if task.deadline %}
+                Deadline: {{ task.deadline }}
+            {% endif %}
+            <br>
+            Tags:
+            {% for tag in task.tags.all %}
+                {{ tag.name }}
+            {% endfor %}
+
+            <br>
+            <button type="button" class="btn btn-outline-primary">
+                <a href="{% url 'tasks:task-delete' pk=task.id %}">Delete task</a>
+            </button>
+            <button type="button" class="btn btn-outline-primary">
+                <a href="{% url 'tasks:task-update' pk=task.id %}">Update task</a>
+            </button>
+            </li>
+
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>There are no tasks for you</p>
+    {% endif %}
+{% endblock %}
